@@ -4,8 +4,13 @@ import { User as NextAuthUser } from 'next-auth';
 import UserModel from '@/model/User.model';
 import { authOptions } from '../../auth/[...nextauth]/options';
 
-export async function DELETE(request: Request, { params }: { params: { messageid: string } }) {
-  const messageId = params.messageid;
+interface Params {
+  messageid: string;
+}
+
+export async function DELETE(request: Request, context: { params: Params }) {
+  const { messageid } = context.params; // destructuring messageid from params
+
   await dbConnect();
 
   // Get the session
@@ -21,7 +26,7 @@ export async function DELETE(request: Request, { params }: { params: { messageid
     // Try to update user messages
     const updateResult = await UserModel.updateOne(
       { _id: _user._id },
-      { $pull: { messages: { _id: messageId } } },
+      { $pull: { messages: { _id: messageid } } },
     );
 
     if (updateResult.modifiedCount === 0) {
