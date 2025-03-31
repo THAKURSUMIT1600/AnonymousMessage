@@ -52,6 +52,10 @@ function UserDashboard() {
       if (refresh) {
         toast('Showing latest messages');
       }
+      const messagesWithStringIds = response.data.messages.map((message: Message) => ({
+        ...message,
+        _id: message._id.toString(), // Convert _id to string if it's an ObjectId
+      }));
     } catch (error) {
       console.log(error);
 
@@ -149,7 +153,7 @@ function UserDashboard() {
         {Array.isArray(messages) && messages.length > 0 ? (
           messages.map((message) => (
             <MessageCards
-              key={message._id}
+              key={String(message._id)}
               message={message}
               onMessageDelete={(deletedMessageId) => {
                 setMessages((prevMessages) =>
