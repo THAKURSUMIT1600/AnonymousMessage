@@ -1,20 +1,24 @@
-import UserModel from '@/model/User.model';
 import { getServerSession } from 'next-auth/next';
 import dbConnect from '@/lib/dbConnect';
-import { User } from 'next-auth';
-
+import { User as NextAuthUser } from 'next-auth';
+import UserModel from '@/model/User.model';
 import { authOptions } from '../../auth/[...nextauth]/options';
 
 export async function DELETE(request: Request, { params }: { params: { messageid: string } }) {
   const messageId = params.messageid;
   await dbConnect();
+
+  // Get the session
   const session = await getServerSession(authOptions);
-  const _user: User = session?.user;
+  const _user: NextAuthUser = session?.user;
+
+  // Ensure user is authenticated
   if (!session || !_user) {
     return Response.json({ success: false, message: 'Not authenticated' }, { status: 401 });
   }
 
   try {
+    // Try to update user messages
     const updateResult = await UserModel.updateOne(
       { _id: _user._id },
       { $pull: { messages: { _id: messageId } } },
