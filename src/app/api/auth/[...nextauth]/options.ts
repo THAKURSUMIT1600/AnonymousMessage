@@ -3,7 +3,6 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User.model';
 import bcrypt from 'bcryptjs';
-import { User } from '@/model/User.model';
 import GoogleProvider from 'next-auth/providers/google';
 export interface Credentials {
   email: string; // The user can log in using email or username
