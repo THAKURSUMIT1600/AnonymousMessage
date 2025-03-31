@@ -21,7 +21,7 @@ export async function POST() {
     const text = response?.candidates?.[0]?.content?.parts?.[0]?.text || '';
 
     return NextResponse.json({ success: true, questions: text.split('||') });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error generating questions:', error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }

@@ -3,11 +3,12 @@ import UserModel from '@/model/User.model';
 import mongoose from 'mongoose';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/options';
+import { User } from 'next-auth';
 
 export async function GET() {
   await dbConnect();
   const session = await getServerSession(authOptions);
-  const _user = session?.user as any; // Ensure _id is accessible
+  const _user = session?.user as User; // Ensure _id is accessible
 
   if (!session || !_user || !_user._id) {
     return new Response(JSON.stringify({ success: false, message: 'Not authenticated' }), {

@@ -3,7 +3,12 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User.model';
 import bcrypt from 'bcryptjs';
+import { User } from '@/model/User.model';
 import GoogleProvider from 'next-auth/providers/google';
+interface Credentials {
+  identifier: string; // The user can log in using email or username
+  password: string;
+}
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -13,7 +18,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'text ' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials: any): Promise<any> {
+      async authorize(credentials: Credentials): Promise<User> {
         await dbConnect();
         try {
           const user = await UserModel.findOne({
@@ -25,12 +30,13 @@ export const authOptions: NextAuthOptions = {
           if (!user.isVerified) {
             throw new Error('Please Verify Your Password ');
           }
+          console.log(user);
           const passwordCorrect = await bcrypt.compare(credentials.password, user.password);
           if (passwordCorrect) {
             return user;
           }
           throw new Error('Incorrect Password');
-        } catch (error: any) {
+        } catch (error) {
           throw new Error(error);
         }
       },
