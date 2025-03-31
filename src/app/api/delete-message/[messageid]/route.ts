@@ -4,13 +4,8 @@ import { User as NextAuthUser } from 'next-auth';
 import UserModel from '@/model/User.model';
 import { authOptions } from '../../auth/[...nextauth]/options';
 
-interface Params {
-  messageid: string;
-}
-
-export async function DELETE(request: Request, context: { params: Params }) {
-  const { messageid } = context.params; // destructuring messageid from params
-
+export async function DELETE(request: Request) {
+  const messageid = request.url.split('/').pop();
   await dbConnect();
 
   // Get the session
