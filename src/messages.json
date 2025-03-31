@@ -1,0 +1,17 @@
+[
+  {
+    "title": "New Message from User",
+    "content": "Hey! Hope you're having a great day. How's everything going?",
+    "received": "10 minutes ago"
+  },
+  {
+    "title": "A Compliment from SecretAdmirer",
+    "content": "I absolutely loved your recent post! Keep up the amazing work!",
+    "received": "2 hours ago"
+  },
+  {
+    "title": "A Question from MysteryGuest",
+    "content": "I'm looking for some great books to read. Do you have any recommendations?",
+    "received": "Yesterday"
+  }
+]
