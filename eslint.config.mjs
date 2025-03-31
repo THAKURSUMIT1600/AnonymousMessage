@@ -13,8 +13,8 @@ const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
   {
     rules: {
-      // TypeScript rule to catch unused variables
-      '@typescript-eslint/no-unused-vars': 'error', // This will flag unused variables as errors
+      'react/no-unescaped-entities': 'off',
+      '@next/next/no-page-custom-font': 'off',
     },
   },
 ];

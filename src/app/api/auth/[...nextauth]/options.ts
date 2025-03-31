@@ -5,7 +5,7 @@ import UserModel from '@/model/User.model';
 import bcrypt from 'bcryptjs';
 import { User } from '@/model/User.model';
 import GoogleProvider from 'next-auth/providers/google';
-interface Credentials {
+export interface Credentials {
   identifier: string; // The user can log in using email or username
   password: string;
 }
@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'text ' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials: Credentials): Promise<User> {
+      async authorize(credentials: Credentials): Promise<User | null> {
         await dbConnect();
         try {
           const user = await UserModel.findOne({
