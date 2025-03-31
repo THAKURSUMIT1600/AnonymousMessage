@@ -52,10 +52,6 @@ function UserDashboard() {
       if (refresh) {
         toast('Showing latest messages');
       }
-      const messagesWithStringIds = response.data.messages.map((message: Message) => ({
-        ...message,
-        _id: message._id.toString(), // Convert _id to string if it's an ObjectId
-      }));
     } catch (error) {
       console.log(error);
 
