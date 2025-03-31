@@ -49,6 +49,7 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   await dbConnect();
+  console.log(request);
   const session = await getServerSession(authOptions);
 
   // Check authentication early

@@ -6,7 +6,7 @@ if (!apiKey) throw new Error('GEMINI_API_KEY is missing in environment variables
 
 const genAI = new GoogleGenerativeAI(apiKey);
 
-export async function POST(request: Request) {
+export async function POST() {
   try {
     const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
     const prompt =

@@ -7,7 +7,7 @@ import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
 import { Message } from '@/model/Message.model';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { Loader2, RefreshCcw } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -35,6 +35,7 @@ function UserDashboard() {
       const response = await axios.get('/api/accept-messages');
       setValue('acceptMessages', response.data.isAcceptingMessage); // FIXED
     } catch (error) {
+      console.log(error);
       toast('Failed to fetch message settings');
     } finally {
       setIsSwitchLoading(false);
@@ -52,6 +53,8 @@ function UserDashboard() {
         toast('Showing latest messages');
       }
     } catch (error) {
+      console.log(error);
+
       toast('Failed to fetch messages');
     } finally {
       setIsLoading(false);
@@ -77,6 +80,8 @@ function UserDashboard() {
       setValue('acceptMessages', response.data.isAcceptingMessage); // FIXED
       toast(response.data.message);
     } catch (error) {
+      console.log(error);
+
       toast('Failed to update message settings');
     } finally {
       setIsSwitchLoading(false);
