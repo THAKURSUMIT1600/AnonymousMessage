@@ -26,14 +26,14 @@ function UserDashboard() {
   });
 
   const { register, watch, setValue } = form;
-  const acceptMessages = watch('acceptMessages');
+  const acceptMessages = watch('acceptMessage');
 
   // ✅ FIXED: Correct API field name (`isAcceptingMessage`)
   const fetchAcceptMessages = useCallback(async () => {
     setIsSwitchLoading(true);
     try {
       const response = await axios.get('/api/accept-messages');
-      setValue('acceptMessages', response.data.isAcceptingMessage); // FIXED
+      setValue('acceptMessage', response.data.isAcceptingMessage); // FIXED
     } catch (error) {
       console.log(error);
       toast('Failed to fetch message settings');
@@ -77,7 +77,7 @@ function UserDashboard() {
         acceptMessages: !acceptMessages,
       });
 
-      setValue('acceptMessages', response.data.isAcceptingMessage); // FIXED
+      setValue('acceptMessage', response.data.isAcceptingMessage); // FIXED
       toast(response.data.message);
     } catch (error) {
       console.log(error);
@@ -119,7 +119,7 @@ function UserDashboard() {
 
       <div className='mb-4 flex items-center'>
         <Switch
-          {...register('acceptMessages')}
+          {...register('acceptMessage')}
           checked={acceptMessages}
           onCheckedChange={handleSwitchChange}
           disabled={isSwitchLoading}
