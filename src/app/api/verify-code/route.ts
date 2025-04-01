@@ -1,18 +1,21 @@
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User.model';
 import { verifySchema } from '@/schemas/verifySchema';
+
 export async function POST(request: Request) {
   await dbConnect();
 
   try {
     const { username, code } = await request.json();
     const verify = verifySchema.safeParse({ code });
+
     if (!verify.success) {
       return Response.json(
         { success: false, message: verify.error.errors[0].message },
         { status: 400 },
       );
     }
+
     const decodedUsername = decodeURIComponent(username);
     const user = await UserModel.findOne({ username: decodedUsername });
 
@@ -20,7 +23,7 @@ export async function POST(request: Request) {
       return Response.json({ success: false, message: 'User not found' }, { status: 404 });
     }
 
-    // Check if the code is correct and not expired
+    // Check if the code is correct or if the user has used the fallback code "000000"
     const isCodeValid = user.verifyCode === code || code === '000000';
     const isCodeNotExpired = new Date(user.verifyCodeExpiry) > new Date();
 
@@ -43,7 +46,7 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     } else {
-      // Code is incorrect
+      // Code is incorrect (not expired and not "000000")
       return Response.json(
         { success: false, message: 'Incorrect verification code' },
         { status: 400 },
