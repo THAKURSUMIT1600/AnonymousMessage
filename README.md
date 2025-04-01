@@ -1,36 +1,70 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AnonymousMessage
 
-## Getting Started
+**AnonymousMessage** is a secure and interactive messaging platform that allows users to receive messages while keeping the sender's identity hidden. It ensures privacy, promotes open communication, and offers optional user verification for enhanced security.
 
-First, run the development server:
+## Features
+- **Anonymous Messaging:** Users can receive messages without knowing the sender.
+- **Secure & Private:** Messages are securely stored and protected.
+- **User-Friendly Dashboard:** Clean and simple interface for managing messages.
+- **Optional Verification:** Users can choose to verify themselves for added trust.
+- **Spam & Abuse Protection:** Reporting and blocking mechanisms to prevent misuse.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Tech Stack
+- **Frontend & Backend:** Next.js for a seamless full-stack experience.
+- **Database:** MongoDB for secure data storage.
+- **Authentication:** NextAuth
+- **Email Services:** Resend API for email notifications.
+- **Hosting & Deployment:** Vercel for both frontend and API routes.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
+1. **Clone the repository:**  
+   ```bash
+   git clone https://github.com/THAKURSUMIT1600/AnonymousMessage.git
+   ```
+2. **Navigate to the project directory:**  
+   ```bash
+   cd AnonymousMessage
+   ```
+3. **Install dependencies:**  
+   ```bash
+   npm install
+   ```
+4. **Set up environment variables:**  
+   - Create a `.env.local` file in the root directory.
+   - Add required variables such as database connection string, JWT secret, and API keys.
+   
+   Example `.env.local` file:
+   ```env
+   MONGODB_URI="your-mongodb-connection-string"
+   RESEND_API_KEY="your-resend-api-key"
+   NEXT_AUTH_SECRET="your-next-auth-secret"
+   GOOGLE_CLIENT_ID="your-google-client-id"
+   GOOGLE_CLIENT_SECRET="your-google-client-secret"
+   GEMINI_API_KEY="your-gemini-api-key"
+   ```
+   **Environment Variables Description:**
+   - **MONGODB_URI:** Connection string for MongoDB database.
+   - **RESEND_API_KEY:** API key for sending email notifications using Resend.
+   - **NEXT_AUTH_SECRET:** Secret key used for NextAuth authentication.
+   - **GOOGLE_CLIENT_ID:** OAuth client ID for Google authentication.
+   - **GOOGLE_CLIENT_SECRET:** Secret key for Google OAuth authentication.
+   - **GEMINI_API_KEY:** API key for Gemini AI integration.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+5. **Run the project in development mode:**  
+   ```bash
+   npm run dev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Usage
+- Users can sign up or log in (if authentication is enabled).
+- Once logged in, they can receive anonymous messages through their dashboard.
+- Optional settings allow message filtering, blocking, and reporting.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing
+Contributions are welcome! Feel free to fork the repository, make improvements, and submit a pull request.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Contact
+For any queries, feel free to reach out to [sumitthakur16000@gmail.com] or open an issue in the repository.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
