@@ -3,43 +3,65 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User.model';
 import bcrypt from 'bcryptjs';
+import { User as UserDocument } from '@/model/User.model';
 import GoogleProvider from 'next-auth/providers/google';
+
+interface Credentials extends Record<string, string> {
+  email: string;
+  password: string;
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       id: 'credentials',
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'text ' },
+        email: { label: 'Email/Username', type: 'text' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials: any): Promise<any> {
+      async authorize(credentials) {
         await dbConnect();
+
+        if (!credentials?.email || !credentials.password) {
+          throw new Error('Email and password are required');
+        }
+
         try {
           const user = await UserModel.findOne({
-            $or: [{ email: credentials.identifier }, { username: credentials.identifier }],
-          });
+            $or: [{ email: credentials.email }, { username: credentials.email }],
+          }).select('+password');
+
           if (!user) {
-            throw new Error('No User Found');
+            throw new Error('No user found with this email/username');
           }
+
           if (!user.isVerified) {
-            throw new Error('Please Verify Your Password ');
+            throw new Error('Please verify your account first');
           }
-          console.log(user);
-          const passwordCorrect = await bcrypt.compare(credentials.password, user.password);
-          if (passwordCorrect) {
-            return user;
+
+          const isPasswordValid = await bcrypt.compare(credentials.password, user.password);
+
+          if (!isPasswordValid) {
+            throw new Error('Incorrect password');
           }
-          throw new Error('Incorrect Password');
+
+          return {
+            id: user._id.toString(),
+            email: user.email,
+            username: user.username,
+            isVerified: user.isVerified,
+            isAcceptingMessage: user.isAcceptingMessage,
+          };
         } catch (error) {
-          console.log(error);
-          throw new Error(error);
+          console.error('Authorization error:', error);
+          throw new Error('Authentication failed');
         }
       },
     }),
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
   callbacks: {
@@ -54,43 +76,32 @@ export const authOptions: NextAuthOptions = {
     },
     async jwt({ token, user, account }) {
       await dbConnect();
-      console.log('JWT Callback - User:', user);
-      console.log('JWT Callback - Token before update:', token);
 
       if (user) {
-        console.log('JWT - Processing User:', user);
-
         if (account?.provider === 'google') {
           let existingUser = await UserModel.findOne({ email: user.email });
-          console.log('JWT - Existing Google User:', existingUser);
 
           if (!existingUser) {
             existingUser = await UserModel.create({
               email: user.email,
-              username: user.email.split('@')[0], // Generate a username
+              username: user.email.split('@')[0],
               isVerified: true,
               isAcceptingMessage: true,
             });
-            console.log('JWT - New Google User Created:', existingUser);
           }
 
-          token.sub = existingUser._id.toString();
           token._id = existingUser._id.toString();
           token.isVerified = existingUser.isVerified;
           token.isAcceptingMessage = existingUser.isAcceptingMessage;
           token.username = existingUser.username;
         } else {
-          console.log('JWT - Credentials User Found:', user);
-
-          token._id = user._id?.toString();
-          token.sub = user._id.toString();
+          token._id = user.id;
           token.isVerified = user.isVerified;
           token.isAcceptingMessage = user.isAcceptingMessage;
           token.username = user.username;
         }
       }
 
-      console.log('JWT Callback - Token after update:', token);
       return token;
     },
   },
