@@ -3,13 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User.model';
 import bcrypt from 'bcryptjs';
-import { User as UserDocument } from '@/model/User.model';
 import GoogleProvider from 'next-auth/providers/google';
-
-interface Credentials extends Record<string, string> {
-  email: string;
-  password: string;
-}
 
 export const authOptions: NextAuthOptions = {
   providers: [
