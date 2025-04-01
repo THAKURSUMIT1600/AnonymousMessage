@@ -5,7 +5,7 @@ import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User.model';
 import bcrypt from 'bcryptjs';
 import GoogleProvider from 'next-auth/providers/google';
-import mongoose, { Types } from 'mongoose';
+import mongoose from 'mongoose';
 
 // Custom JWT Token type definition
 interface CustomJWT extends JWT {
