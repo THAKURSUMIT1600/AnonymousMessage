@@ -22,9 +22,9 @@ export const authOptions: NextAuthOptions = {
         }
 
         try {
-          const user = await UserModel.findOne({
-            $or: [{ email: credentials.email }, { username: credentials.email }],
-          }).select('+password');
+          const user = await UserModel.findOne({ email: credentials.email })
+            .select('+password')
+            .lean();
 
           if (!user) {
             throw new Error('No user found with this email/username');
@@ -78,7 +78,7 @@ export const authOptions: NextAuthOptions = {
           if (!existingUser) {
             existingUser = await UserModel.create({
               email: user.email,
-              username: user.email.split('@')[0],
+              username: user.username,
               isVerified: true,
               isAcceptingMessage: true,
             });
