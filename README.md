@@ -1,4 +1,4 @@
-# AnonymousMessage
+# AnonymousMessage (True Feedback)
 
 **AnonymousMessage** is a secure and interactive messaging platform that allows users to receive messages while keeping the sender's identity hidden. It ensures privacy, promotes open communication, and offers optional user verification for enhanced security.
 
