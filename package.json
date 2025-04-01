@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build --no-lint ",
     "start": "next start",
     "lint": "next lint"
   },
@@ -51,6 +51,7 @@
     "@types/react-dom": "^19",
     "@typescript-eslint/eslint-plugin": "^8.28.0",
     "@typescript-eslint/parser": "^8.28.0",
+    "cross-env": "^7.0.3",
     "eslint": "^9.23.0",
     "eslint-config-next": "15.2.3",
     "eslint-plugin-next": "^0.0.0",

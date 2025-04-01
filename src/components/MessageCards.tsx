@@ -31,7 +31,10 @@ export function MessageCards({ message, onMessageDelete }: MessageCardProps) {
     try {
       const response = await axios.delete<ApiResponse>(`/api/delete-message/${message._id}`);
       toast(response.data.message);
-      onMessageDelete(message._id);
+      console.log('Message Object:', message);
+      console.log('Message ID:', message?._id);
+      const messageId = message._id;
+      onMessageDelete(messageId);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
       toast(axiosError.response?.data.message);

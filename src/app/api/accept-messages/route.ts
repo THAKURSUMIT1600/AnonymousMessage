@@ -1,8 +1,8 @@
-import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/options';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User.model';
 import mongoose from 'mongoose';
+import { getServerSession } from 'next-auth/next';
 
 export async function POST(request: Request) {
   await dbConnect();
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
   await dbConnect();
   console.log(request);
   const session = await getServerSession(authOptions);
-
+  console.log(session);
   // Check authentication early
   if (!session || !session.user) {
     return Response.json({ success: false, message: 'Not Authenticated' }, { status: 401 });
