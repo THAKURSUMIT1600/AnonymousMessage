@@ -4,10 +4,6 @@ import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User.model';
 import bcrypt from 'bcryptjs';
 import GoogleProvider from 'next-auth/providers/google';
-export interface Credentials {
-  email: string; // The user can log in using email or username
-  password: string;
-}
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -17,7 +13,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'text ' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials) {
+      async authorize(credentials: any): Promise<any> {
         await dbConnect();
         try {
           const user = await UserModel.findOne({
@@ -36,6 +32,7 @@ export const authOptions: NextAuthOptions = {
           }
           throw new Error('Incorrect Password');
         } catch (error) {
+          console.log(error);
           throw new Error(error);
         }
       },
