@@ -91,7 +91,7 @@ function UserDashboard() {
   // ✅ Ensure session is available before rendering
   if (!session?.user) return <div></div>;
 
-  const username = session.user.username;
+  const username = session.user.name;
   const baseUrl = `${window.location.protocol}//${window.location.host}`;
   const profileUrl = `${baseUrl}/u/${username}`;
 
