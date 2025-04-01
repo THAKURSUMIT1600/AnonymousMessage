@@ -1,9 +1,19 @@
 import { NextAuthOptions } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import dbConnect from '@/lib/dbConnect';
 import UserModel from '@/model/User.model';
 import bcrypt from 'bcryptjs';
 import GoogleProvider from 'next-auth/providers/google';
+import mongoose, { Types } from 'mongoose';
+
+// Custom JWT Token type definition
+interface CustomJWT extends JWT {
+  _id?: string;
+  isVerified?: boolean;
+  isAcceptingMessage?: boolean;
+  username?: string;
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -68,8 +78,12 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+
     async jwt({ token, user, account }) {
       await dbConnect();
+
+      // Explicitly type the token as CustomJWT
+      const customToken = token as CustomJWT;
 
       if (user) {
         if (account?.provider === 'google') {
@@ -84,19 +98,26 @@ export const authOptions: NextAuthOptions = {
             });
           }
 
-          token._id = existingUser._id.toString();
-          token.isVerified = existingUser.isVerified;
-          token.isAcceptingMessage = existingUser.isAcceptingMessage;
-          token.username = existingUser.username;
+          // Ensure _id is properly casted to string
+          customToken._id =
+            existingUser._id instanceof mongoose.Types.ObjectId
+              ? existingUser._id.toString()
+              : String(existingUser._id);
+
+          customToken.isVerified = existingUser.isVerified;
+          customToken.isAcceptingMessage = existingUser.isAcceptingMessage;
+          customToken.username = existingUser.username;
         } else {
-          token._id = user.id;
-          token.isVerified = user.isVerified;
-          token.isAcceptingMessage = user.isAcceptingMessage;
-          token.username = user.username;
+          // For credentials provider, handle user.id properly
+          customToken._id = user.id ? String(user.id) : undefined;
+          customToken.isVerified = user.isVerified;
+          customToken.isAcceptingMessage = user.isAcceptingMessage;
+          customToken.username = user.username;
         }
       }
 
-      return token;
+      // Return the token without explicit casting
+      return customToken;
     },
   },
   pages: {
