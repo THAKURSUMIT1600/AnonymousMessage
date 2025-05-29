@@ -66,11 +66,20 @@ export const authOptions: NextAuthOptions = {
           console.log('JWT - Existing Google User:', existingUser);
 
           if (!existingUser) {
+            // Generate random values for required fields since Google login doesn't provide password/verifyCode
+            const randomPassword = bcrypt.hashSync(Math.random().toString(36), 10); // hash a random string
+            const verifyCode = Math.floor(100000 + Math.random() * 900000).toString(); // e.g., 6-digit code
+            const verifyCodeExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours from now
+
             existingUser = await UserModel.create({
               email: user.email,
-              username: user.username,
-              isVerified: true,
+              username: user.name?.replace(/\s+/g, '').toLowerCase() || `user${Date.now()}`,
+              password: randomPassword,
+              verifyCode,
+              verifyCodeExpiry,
+              isVerified: true, // Google verified
               isAcceptingMessage: true,
+              messages: [], // optional field
             });
             console.log('JWT - New Google User Created:', existingUser);
           }
